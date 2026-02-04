@@ -1,4 +1,48 @@
 /* styles.css */
 body {
-  background-color: rebeccapurple;
+  font-family:
+    -apple-system, system-ui, "Segoe UI", Roboto, Noto, Oxygen-Sans, Ubuntu,
+    Cantrell, "Helvetica Neue", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.header {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+
+  color: rgba(0, 0, 240, 0.529);
+  font-size: 1.5rem;
+
+  height: 5vh;
+  padding: 2.5rem 2rem;
+
+}
+
+.search-bar {
+  display: flex;
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0.208);
+  background-color: rgba(0, 0, 0, 0.101);
+  padding: 0 0.5rem;
+}
+
+#search-input {
+  font-size: 1rem;
+  padding: .5rem 0.5rem;
+  /* margin-right: 5rem; */
+  border: none;
+  background: transparent;
+  /* border-width: 1px;
+  border-color: rgba(0, 0, 0, 0.208); */
+  /* justify-: end; */
+}
+
+#search-input:focus{
+  outline: none;
+}
+
+.search-icon {
+  width: 1.5rem;
 }

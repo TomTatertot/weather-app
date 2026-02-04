@@ -5,7 +5,7 @@ import "./reset.css";
 const locationForm = document.querySelector(".location-form");
 locationForm.addEventListener("submit", (e)=> {
   e.preventDefault();
-  
+
   let location = locationForm.querySelector("#location").value;
   console.log(location);
   locationForm.reset();
@@ -30,6 +30,7 @@ async function fetchWeather(location){
   return weatherJSON;
 }
 
+//returns object containing data of the current day.
 function getCurrentWeather(weather){
   const currentWeather = weather.currentConditions;
 
@@ -45,6 +46,7 @@ function getCurrentWeather(weather){
   }
 }
 
+//returns an array containing the objects of data for 7-day weather
 function getWeekWeather(weather) {
   let weekData = [];
   for (let i = 0; i < 7; i++) {
