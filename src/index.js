@@ -39,6 +39,13 @@ const weekWeather = [
   { temp: 73, conditions: "Foggy", icon: "fog", dateTime: "2026-02-10" },
 ];
 
+const measurementSystem = "Imperial";
+let speedUnit = measurementSystem === "Imperial" ? "mph" : "km/h"
+let tempUnit = measurementSystem === "Imperial" ? "°F" : "°C";
+console.log(weekWeather);
+console.log(weekWeather[0]);
+console.log(getNameOfDay(weekWeather[3].dateTime));
+
 // const locationForm = document.querySelector(".search-form");
 // locationForm.addEventListener("submit", (e)=> {
 //   e.preventDefault();
@@ -57,7 +64,8 @@ const weekWeather = [
 
 // })
 
-createMain("Oceanside", currentWeather, weekWeather);
+createTopMain("Oceanside", currentWeather);
+createBottomMain(weekWeather);
 
 async function fetchWeather(location) {
   const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=K3G2LWP2CFRKQBQBG9G32U75K`;
@@ -103,75 +111,86 @@ function getWeekWeather(weather) {
   return weekWeather;
 }
 
-function createMain(address, currentWeather, weekWeather) {
-  
+function createTopMain(address, currentWeather) {
   // const content = document.querySelector(".content");
-
   const main = document.querySelector(".main");
+
   const location = main.querySelector(".location-header");
   const icon = main.querySelector(".current-icon");
   const temp = main.querySelector(".current-temp");
-  const condition = main.querySelector(".current-condition");
+  const conditions = main.querySelector(".current-conditions");
   const currentDay = main.querySelector(".current-day");
   const currentHour = main.querySelector(".current-hour");
-
+  const humidity = main.querySelector(".humidity");
+  const precip = main.querySelector(".precipitation");
+  const windspeed = main.querySelector(".windspeed");
+  const uvIndex = main.querySelector(".uv-index");
+  const sunrise = main.querySelector(".sunrise");
+  const sunset = main.querySelector(".sunset");
+  
   location.textContent = address;
   icon.src = clearDayIcon;
-  temp.textContent = currentWeather.temp + "°F";
-  condition.textContent = currentWeather.conditions;
-  currentDay.textContent = getCurrentDayName();
-  currentHour.textContent = formatTime(currentWeather.dateTime);
-
-  // const mainTop = document.createElement("div");
-  // mainTop.classList.add("main__top");
-
-  // const mainTopLeft = document.createElement("div");
-  // mainTopLeft.classList.add("main__top-left");
-
-  // const locationHeader = document.createElement("h1");
-  // locationHeader.classList.add("location-header");
-  // locationHeader.textContent = address;
-
-  // const icon = document.createElement("img");
-  // icon.classList.add("current-icon");
-  // icon.src = clearDayIcon;
-
-  // const temp = document.createElement("div");
-  // temp.classList.add("current-temp");
-  // temp.textContent = currentWeather.temp + "°F";
-
-  // const condition = document.createElement("div");
-  // condition.classList.add("current-condition");
-  // condition.textContent = currentWeather.conditions;
-
-  // const currentDay = document.createElement("div");
-  // currentDay.classList.add("current-day");
-  // currentDay.textContent = getCurrentDayName();
-
-  // const currentHour = document.createElement("div");
-  // currentHour.classList.add("current-hour");
-  // currentHour.textContent = formatTime(currentWeather.dateTime);
-
-  // content.append(main);
-  // main.append(mainTop);
-  // mainTop.append(mainTopLeft);
-  // mainTopLeft.append(
-  //   locationHeader, 
-  //   icon, 
-  //   temp, 
-  //   condition, 
-  //   currentDay, 
-  //   currentHour);
-
-  console.log(farenheitToCelsius(42) + "°C");
-  console.log(celsiusToFarenheit(farenheitToCelsius(42)) + "°F");
+  temp.textContent = currentWeather.temp + tempUnit;
+  conditions.textContent = currentWeather.conditions;
+  currentDay.textContent = getNameOfToday();
+  currentHour.textContent = formatTimeRounded(currentWeather.dateTime);
+  humidity.textContent = currentWeather.humidity + "%";
+  precip.textContent = currentWeather.precip + "%";
+  windspeed.textContent = currentWeather.windspeed + speedUnit;
+  uvIndex.textContent = currentWeather.uvIndex;
+  sunrise.textContent = formatTime(currentWeather.sunrise);
+  sunset.textContent = formatTime(currentWeather.sunset);
 }
 
-function getCurrentDayName() {
+function createBottomMain(weekWeather){
+  const mainBottom = document.querySelector(".main__bottom");
+
+  weekWeather.forEach(day => {
+    const card = createDayCard(day);
+    console.log(card);
+    mainBottom.append(card);
+  });
+}
+
+//creates a card for each day in 7 day forecast
+function createDayCard(dayWeather){
+
+  const card = document.createElement("div");
+  card.classList.add("card");
+
+  const day = document.createElement("div");
+  day.classList.add("day");
+
+  const icon = document.createElement("img");
+  icon.classList.add("icon");
+
+  const temp = document.createElement("div");
+  temp.classList.add("temp");
+  
+  const conditions = document.createElement("div");
+  conditions.classList.add("conditions");
+
+  day.textContent = getNameOfDay(dayWeather.dateTime);
+  icon.src = clearDayIcon;
+  temp.textContent = dayWeather.temp;
+  conditions.textContent = dayWeather.conditions;
+
+  card.append(day, icon, temp, conditions);
+  console.log(card);
+  return card;
+}
+
+function getNameOfDay(dateString){
+  const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
+  const dayName = format(parsedDate, "EEEE");
+  return dayName;
+}
+
+function getNameOfToday() {
   return format(new Date(), "EEEE");
 }
 
-function formatTime(time) {
+function formatTimeRounded(time) {
   //Create Date object given string. HH: 24 hour time, mm: minutes, ss: seconds
   const date = parse(time, "HH:mm:ss", new Date());
   const rounded = startOfHour(date); //round down to start of hour
@@ -179,6 +198,11 @@ function formatTime(time) {
   return formatted;
 }
 
+function formatTime(time){
+  const date = parse(time, "HH:mm:ss", new Date());
+  const formatted = format(date, "h:mm a");
+  return formatted;
+}
 //°C
 function farenheitToCelsius(temp){
   const result = (temp - 32) * 5 / 9;
@@ -190,3 +214,7 @@ function celsiusToFarenheit(temp){
   const result = (temp * 9 / 5) + 32;
   return Number(result.toFixed(1));
 }
+
+// function swapMeasurementSystem() {
+
+// }

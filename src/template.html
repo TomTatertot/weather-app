@@ -7,13 +7,12 @@
   </head>
   <body>
     <header class="header">
-      <h1>Weather </h1>
+      <h1>Weather</h1>
       <form class="search-form">
         <!-- <label for="search">Please enter a location: </label> -->
         <div class="search-bar">
-          <img class="search-icon" src="../images/magnify.svg" alt="">
+          <img class="search-icon" src="../images/magnify.svg" alt="" />
           <input type="text" name="search-input" id="search-input" />
-          
         </div>
       </form>
     </header>
@@ -21,14 +20,64 @@
       <main class="main">
         <div class="main__top">
           <div class="main__top-left">
-            <h1 class="location-header"></h1>
-            <img class="current-icon">
-            <div class="current-temp"></div>
-            <div class="current-condition"></div>
-            <div class="current-day"></div>
-            <div class="current-hour"></div>
+            <h2 class="location-header"></h2>
+            <div class="icon-temp">
+              <img class="current-icon" />
+              <div class="current-temp"></div>
+              <div class="temp-unit"></div>
+            </div>
+            <div class="date-time">
+              <div class="current-day"></div>
+              <div class="current-hour"></div>
+            </div>
+            <div class="current-conditions"></div>
+          </div>
+          <div class="main__top-right">
+            <div class="grid-item">
+              <div class="item-title">
+                <img src="../images/humidity.svg" alt="Humidity" /> Humidity:
+              </div>
+              <div class="humidity value"></div>
+            </div>
+            <div class="grid-item">
+              <div class="item-title">
+                <img src="../images/precipitation.svg" alt="Precipitation" />
+                Precipitation:
+              </div>
+              <div class="precipitation value"></div>
+            </div>
+            <div class="grid-item">
+              <div class="item-title">
+                <img src="../images/windspeed.svg" alt="Wind" /> Wind:
+              </div>
+              <div class="windspeed value"></div>
+              <div class="speed-unit"></div>
+            </div>
+            <div class="grid-item">
+              <div class="item-title">
+                <img src="../images/uv-index.svg" alt="UV Index" /> UV Index:
+              </div>
+              <div class="uv-index value"></div>
+            </div>
+            <div class="grid-item">
+              <div class="item-title">
+                <img src="../images/sunrise.svg" alt="Sunrise" />Sunrise:
+              </div>
+              <div class="sunrise value"></div>
+            </div>
+            <div class="grid-item">
+              <div class="item-title">
+                <img src="../images/sunset.svg" alt="Sunset" />Sunset:
+              </div>
+              <div class="sunset value"></div>
+            </div>
           </div>
         </div>
+        <h1 class="main__bottom-title">7 Day Forecast</h1>
+
+        <div class="main__bottom">
+        </div>
+        <div></div>
       </main>
     </div>
   </body>
