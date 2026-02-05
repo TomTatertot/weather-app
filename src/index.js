@@ -2,13 +2,15 @@
 import "./styles.css";
 import "./reset.css";
 import clearDayIcon from "../images/clear-day.svg";
+import { parse, format, startOfHour } from "date-fns";
 
 //simulated weather data objects to prevent too many API calls being made while testing:
-const address = "Oceanside";  
+const address = "Oceanside";
 const currentWeather = {
   temp: 70,
   conditions: "Clear",
   icon: "clear-day",
+  dateTime: "22:10:23",
   humidity: 79.5,
   precip: 0,
   windspeed: 3,
@@ -18,14 +20,24 @@ const currentWeather = {
 };
 
 const weekWeather = [
-  {temp: 70, conditions: "Clear", icon: "clear-day",},
-  {temp: 59, conditions: "Cloudy", icon: "cloudy",},
-  {temp: 65, conditions: "Rain", icon: "rain",},
-  {temp: 81, conditions: "Clear", icon: "clear",},
-  {temp: 65, conditions: "Partially Cloudy", icon: "partly-cloudy-day",},
-  {temp: 72, conditions: "Partially Cloudy", icon: "partly-cloudy-night",},
-  {temp: 73, conditions: "Foggy", icon: "fog",},
-]
+  { temp: 70, conditions: "Clear", icon: "clear-day", dateTime: "2026-02-04" },
+  { temp: 59, conditions: "Cloudy", icon: "cloudy", dateTime: "2026-02-05" },
+  { temp: 65, conditions: "Rain", icon: "rain", dateTime: "2026-02-06" },
+  { temp: 81, conditions: "Clear", icon: "clear", dateTime: "2026-02-07" },
+  {
+    temp: 65,
+    conditions: "Partially Cloudy",
+    icon: "partly-cloudy-day",
+    dateTime: "2026-02-08",
+  },
+  {
+    temp: 72,
+    conditions: "Partially Cloudy",
+    icon: "partly-cloudy-night",
+    dateTime: "2026-02-09",
+  },
+  { temp: 73, conditions: "Foggy", icon: "fog", dateTime: "2026-02-10" },
+];
 
 // const locationForm = document.querySelector(".search-form");
 // locationForm.addEventListener("submit", (e)=> {
@@ -34,14 +46,14 @@ const weekWeather = [
 //   console.log(location);
 //   locationForm.reset();
 
-  fetchWeather("Oceanside").then(weather => {
-    const address = weather.address;
-    const currWeather = getCurrentWeather(weather);
-    const weekWeather = getWeekWeather(weather);
-    console.log(address, weather, currWeather, weekWeather);
-  }).catch(err => {
-    console.error(err);
-  });
+// fetchWeather("Oceanside").then(weather => {
+//   const address = weather.address;
+//   const currWeather = getCurrentWeather(weather);
+//   const weekWeather = getWeekWeather(weather);
+//   console.log(address, weather, currWeather, weekWeather);
+// }).catch(err => {
+//   console.error(err);
+// });
 
 // })
 
@@ -66,6 +78,7 @@ function getCurrentWeather(weather) {
     temp: currentWeather.temp,
     conditions: currentWeather.conditions,
     icon: currentWeather.icon,
+    dateTime: currentWeather.datetime,
     humidity: currentWeather.humidity,
     precip: currentWeather.precip,
     windspeed: currentWeather.windspeed,
@@ -91,35 +104,89 @@ function getWeekWeather(weather) {
 }
 
 function createMain(address, currentWeather, weekWeather) {
-  const content = document.querySelector(".content");
+  
+  // const content = document.querySelector(".content");
 
-  const main = document.createElement("main");
-  main.classList.add("main");
+  const main = document.querySelector(".main");
+  const location = main.querySelector(".location-header");
+  const icon = main.querySelector(".current-icon");
+  const temp = main.querySelector(".current-temp");
+  const condition = main.querySelector(".current-condition");
+  const currentDay = main.querySelector(".current-day");
+  const currentHour = main.querySelector(".current-hour");
 
-  const mainTop = document.createElement("div");
-  mainTop.classList.add("main__top");
-
-  const mainTopLeft = document.createElement("div");
-  mainTopLeft.classList.add("main__top-left");
-
-  const locationHeader = document.createElement("h1");
-  locationHeader.classList.add("location-header");
-  locationHeader.textContent = address;
-
-  const icon = document.createElement("img");
-  icon.classList.add("current-icon");
+  location.textContent = address;
   icon.src = clearDayIcon;
-
-  const temp = document.createElement("div");
-  temp.classList.add("current-temp");
-  temp.textContent = currentWeather.temp;
-
-  const condition = document.createElement("div");
-  condition.classList.add("current-condition");
+  temp.textContent = currentWeather.temp + "°F";
   condition.textContent = currentWeather.conditions;
+  currentDay.textContent = getCurrentDayName();
+  currentHour.textContent = formatTime(currentWeather.dateTime);
 
-  content.append(main);
-  main.append(mainTop);
-  mainTop.append(mainTopLeft);
-  mainTopLeft.append(locationHeader, icon, temp, condition);
+  // const mainTop = document.createElement("div");
+  // mainTop.classList.add("main__top");
+
+  // const mainTopLeft = document.createElement("div");
+  // mainTopLeft.classList.add("main__top-left");
+
+  // const locationHeader = document.createElement("h1");
+  // locationHeader.classList.add("location-header");
+  // locationHeader.textContent = address;
+
+  // const icon = document.createElement("img");
+  // icon.classList.add("current-icon");
+  // icon.src = clearDayIcon;
+
+  // const temp = document.createElement("div");
+  // temp.classList.add("current-temp");
+  // temp.textContent = currentWeather.temp + "°F";
+
+  // const condition = document.createElement("div");
+  // condition.classList.add("current-condition");
+  // condition.textContent = currentWeather.conditions;
+
+  // const currentDay = document.createElement("div");
+  // currentDay.classList.add("current-day");
+  // currentDay.textContent = getCurrentDayName();
+
+  // const currentHour = document.createElement("div");
+  // currentHour.classList.add("current-hour");
+  // currentHour.textContent = formatTime(currentWeather.dateTime);
+
+  // content.append(main);
+  // main.append(mainTop);
+  // mainTop.append(mainTopLeft);
+  // mainTopLeft.append(
+  //   locationHeader, 
+  //   icon, 
+  //   temp, 
+  //   condition, 
+  //   currentDay, 
+  //   currentHour);
+
+  console.log(farenheitToCelsius(42) + "°C");
+  console.log(celsiusToFarenheit(farenheitToCelsius(42)) + "°F");
+}
+
+function getCurrentDayName() {
+  return format(new Date(), "EEEE");
+}
+
+function formatTime(time) {
+  //Create Date object given string. HH: 24 hour time, mm: minutes, ss: seconds
+  const date = parse(time, "HH:mm:ss", new Date());
+  const rounded = startOfHour(date); //round down to start of hour
+  const formatted = format(rounded, "h:mm a"); //h: 12 hour time, mm: minutes  a: AM/PM
+  return formatted;
+}
+
+//°C
+function farenheitToCelsius(temp){
+  const result = (temp - 32) * 5 / 9;
+  return Number(result.toFixed(1));
+}
+
+//°F
+function celsiusToFarenheit(temp){
+  const result = (temp * 9 / 5) + 32;
+  return Number(result.toFixed(1));
 }
