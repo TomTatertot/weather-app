@@ -1,7 +1,6 @@
 // index.js
 import "./styles.css";
 import "./reset.css";
-import clearDayIcon from "../images/clear-day.svg";
 import { parse, format, startOfHour } from "date-fns";
 
 //simulated weather data objects to prevent too many API calls being made while testing:
@@ -23,28 +22,21 @@ const weekWeather = [
   { temp: 70, conditions: "Clear", icon: "clear-day", dateTime: "2026-02-04" },
   { temp: 59, conditions: "Cloudy", icon: "cloudy", dateTime: "2026-02-05" },
   { temp: 65, conditions: "Rain", icon: "rain", dateTime: "2026-02-06" },
-  { temp: 81, conditions: "Clear", icon: "clear", dateTime: "2026-02-07" },
+  { temp: 81, conditions: "Clear", icon: "clear-day", dateTime: "2026-02-07" },
   {
-    temp: 65,
-    conditions: "Partially Cloudy",
-    icon: "partly-cloudy-day",
-    dateTime: "2026-02-08",
+    temp: 65, conditions: "Partially Cloudy", icon: "partly-cloudy-day", dateTime: "2026-02-08",
   },
   {
-    temp: 72,
-    conditions: "Partially Cloudy",
-    icon: "partly-cloudy-night",
-    dateTime: "2026-02-09",
+    temp: 72, conditions: "Partially Cloudy", icon: "partly-cloudy-night", dateTime: "2026-02-09",
   },
   { temp: 73, conditions: "Foggy", icon: "fog", dateTime: "2026-02-10" },
 ];
 
 const measurementSystem = "Imperial";
-let speedUnit = measurementSystem === "Imperial" ? "mph" : "km/h"
+let speedUnit = measurementSystem === "Imperial" ? "mph" : "km/h";
 let tempUnit = measurementSystem === "Imperial" ? "°F" : "°C";
-console.log(weekWeather);
-console.log(weekWeather[0]);
-console.log(getNameOfDay(weekWeather[3].dateTime));
+
+// getIconSrc(currentWeather.icon);
 
 // const locationForm = document.querySelector(".search-form");
 // locationForm.addEventListener("submit", (e)=> {
@@ -63,7 +55,6 @@ console.log(getNameOfDay(weekWeather[3].dateTime));
 // });
 
 // })
-
 createTopMain("Oceanside", currentWeather);
 createBottomMain(weekWeather);
 
@@ -111,7 +102,7 @@ function getWeekWeather(weather) {
   return weekWeather;
 }
 
-function createTopMain(address, currentWeather) {
+async function createTopMain(address, currentWeather) {
   // const content = document.querySelector(".content");
   const main = document.querySelector(".main");
 
@@ -127,9 +118,9 @@ function createTopMain(address, currentWeather) {
   const uvIndex = main.querySelector(".uv-index");
   const sunrise = main.querySelector(".sunrise");
   const sunset = main.querySelector(".sunset");
-  
+
   location.textContent = address;
-  icon.src = clearDayIcon;
+  setIcon(icon, currentWeather.icon);
   temp.textContent = currentWeather.temp + tempUnit;
   conditions.textContent = currentWeather.conditions;
   currentDay.textContent = getNameOfToday();
@@ -142,19 +133,17 @@ function createTopMain(address, currentWeather) {
   sunset.textContent = formatTime(currentWeather.sunset);
 }
 
-function createBottomMain(weekWeather){
+function createBottomMain(weekWeather) {
   const mainBottom = document.querySelector(".main__bottom");
 
-  weekWeather.forEach(day => {
+  weekWeather.forEach((day) => {
     const card = createDayCard(day);
-    console.log(card);
     mainBottom.append(card);
   });
 }
 
 //creates a card for each day in 7 day forecast
-function createDayCard(dayWeather){
-
+function createDayCard(dayWeather) {
   const card = document.createElement("div");
   card.classList.add("card");
 
@@ -166,21 +155,24 @@ function createDayCard(dayWeather){
 
   const temp = document.createElement("div");
   temp.classList.add("temp");
-  
+
   const conditions = document.createElement("div");
   conditions.classList.add("conditions");
 
   day.textContent = getNameOfDay(dayWeather.dateTime);
-  icon.src = clearDayIcon;
+  setIcon(icon, dayWeather.icon);
   temp.textContent = dayWeather.temp;
   conditions.textContent = dayWeather.conditions;
-
   card.append(day, icon, temp, conditions);
-  console.log(card);
   return card;
 }
 
-function getNameOfDay(dateString){
+async function setIcon(icon, iconName) {
+  const module = await import(`../images/${iconName}.svg`)
+  icon.src = module.default;
+}
+
+function getNameOfDay(dateString) {
   const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
   const dayName = format(parsedDate, "EEEE");
   return dayName;
@@ -198,20 +190,20 @@ function formatTimeRounded(time) {
   return formatted;
 }
 
-function formatTime(time){
+function formatTime(time) {
   const date = parse(time, "HH:mm:ss", new Date());
   const formatted = format(date, "h:mm a");
   return formatted;
 }
 //°C
-function farenheitToCelsius(temp){
-  const result = (temp - 32) * 5 / 9;
+function farenheitToCelsius(temp) {
+  const result = ((temp - 32) * 5) / 9;
   return Number(result.toFixed(1));
 }
 
 //°F
-function celsiusToFarenheit(temp){
-  const result = (temp * 9 / 5) + 32;
+function celsiusToFarenheit(temp) {
+  const result = (temp * 9) / 5 + 32;
   return Number(result.toFixed(1));
 }
 
