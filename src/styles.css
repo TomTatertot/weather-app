@@ -15,7 +15,7 @@ body {
   font-size: 1.5rem;
 
   height: 5vh;
-  padding: 2.5rem 2rem;
+  padding: 2.5rem 4rem 2.5rem 2.5rem;
 
 }
 
@@ -26,17 +26,14 @@ body {
   border-color: rgba(0, 0, 0, 0.208);
   background-color: rgba(0, 0, 0, 0.101);
   padding: 0 0.5rem;
+  /* margin-right: 3rem; */
 }
 
 #search-input {
   font-size: 1rem;
-  padding: .5rem 0.5rem;
-  /* margin-right: 5rem; */
+  padding: .7rem 0.5rem;
   border: none;
   background: transparent;
-  /* border-width: 1px;
-  border-color: rgba(0, 0, 0, 0.208); */
-  /* justify-: end; */
 }
 
 #search-input:focus{
@@ -45,4 +42,12 @@ body {
 
 .search-icon {
   width: 1.5rem;
+}
+
+.main {
+
+}
+
+.current-icon{
+  width: 5rem;
 }
