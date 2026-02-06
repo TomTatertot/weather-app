@@ -8,23 +8,29 @@
   <body>
     <header class="header">
       <h1>Weather</h1>
-      <form class="search-form">
-        <!-- <label for="search">Please enter a location: </label> -->
-        <div class="search-bar">
-          <img class="search-icon" src="../images/magnify.svg" alt="" />
-          <input type="text" name="search-input" id="search-input" />
+      <div class="header-right">
+        <div class="button-container">
+          <button class="farenheit selected">°F</button><span></span
+          ><button class="celsius">°C</button>
         </div>
-      </form>
+        <form class="search-form">
+          <!-- <label for="search">Please enter a location: </label> -->
+          <div class="search-bar">
+            <img class="search-icon" src="../images/magnify.svg" alt="" />
+            <input type="text" name="search-input" id="search-input" />
+          </div>
+        </form>
+      </div>
     </header>
     <div class="content">
-      <main class="main">
+      <main class="main invisible">
         <div class="main__top">
           <div class="main__top-left">
             <h2 class="location-header"></h2>
             <div class="icon-temp">
               <img class="current-icon" />
-              <div class="current-temp"></div>
-              <div class="temp-unit"></div>
+              <span class="temp"></span>
+              <span class="temp-unit">°F</span>
             </div>
             <div class="date-time">
               <div class="current-day"></div>
@@ -50,8 +56,8 @@
               <div class="item-title">
                 <img src="../images/windspeed.svg" alt="Wind" /> Wind:
               </div>
-              <div class="windspeed value"></div>
-              <div class="speed-unit"></div>
+              <span class="windspeed value"></span>
+              <span class="speed-unit">mph</span>
             </div>
             <div class="grid-item">
               <div class="item-title">
@@ -75,8 +81,7 @@
         </div>
         <h1 class="main__bottom-title">7 Day Forecast</h1>
 
-        <div class="main__bottom">
-        </div>
+        <div class="main__bottom"></div>
         <div></div>
       </main>
     </div>
