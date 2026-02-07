@@ -1,5 +1,5 @@
 {
-  "name": "webpack-template",
+  "name": "weather-app",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -10,15 +10,15 @@
     "lint": "eslint src"
   },
   "repository": {
-    "url": "git+https://github.com/TomTatertot/webpack-template.git"
+    "url": "git+https://github.com/TomTatertot/weather-app.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TomTatertot/webpack-template/issues"
+    "url": "https://github.com/TomTatertot/weather-app/issues"
   },
-  "homepage": "https://github.com/TomTatertot/webpack-template#readme",
+  "homepage": "https://github.com/TomTatertot/weather-app#readme",
   "description": "",
   "devDependencies": {
     "@eslint/css": "^0.11.0",

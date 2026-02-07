@@ -2,6 +2,7 @@
 import "./styles.css";
 import "./reset.css";
 import { parse, format, startOfHour } from "date-fns";
+// import { address, currentWeather, weekWeather } from "./test";
 
 let unitSystem = "us";
 
@@ -177,7 +178,7 @@ function createDayCard(dayWeather) {
 }
 
 async function setIcon(icon, iconName) {
-  const module = await import(`../images/${iconName}.svg`);
+  const module = await import(`./images/${iconName}.svg`);
   icon.src = module.default;
 }
 
