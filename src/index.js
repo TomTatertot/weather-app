@@ -4,7 +4,7 @@ import "./reset.css";
 import { parse, format, startOfHour } from "date-fns";
 // import { address, currentWeather, weekWeather } from "./test";
 
-let measurementSystem = "Imperial";
+let unitSystem = "us";
 
 // getIconSrc(currentWeather.icon);
 
@@ -44,13 +44,14 @@ celsiusBtn.addEventListener("click", (e) => {
 });
 
 async function fetchWeather(location) {
-  const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?key=K3G2LWP2CFRKQBQBG9G32U75K`;
+  const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=${unitSystem}&key=K3G2LWP2CFRKQBQBG9G32U75K`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
 
   const weatherJSON = await response.json();
+  console.log(weatherJSON);
   const main = document.querySelector(".main");
   main.classList.remove("invisible");
   const address = weatherJSON.address;
@@ -103,12 +104,14 @@ function updateTodayWeather(address, currentWeather) {
   const location = mainTop.querySelector(".location-header");
   const icon = mainTop.querySelector(".current-icon");
   const temp = mainTop.querySelector(".temp");
+  const tempUnit = mainTop.querySelector(".temp-unit");
   const conditions = mainTop.querySelector(".current-conditions");
   const currentDay = mainTop.querySelector(".current-day");
   const currentHour = mainTop.querySelector(".current-hour");
   const humidity = mainTop.querySelector(".humidity");
   const precip = mainTop.querySelector(".precipitation");
   const windspeed = mainTop.querySelector(".windspeed");
+  const speedUnit = mainTop.querySelector(".speed-unit");
   const uvIndex = mainTop.querySelector(".uv-index");
   const sunrise = mainTop.querySelector(".sunrise");
   const sunset = mainTop.querySelector(".sunset");
@@ -116,12 +119,14 @@ function updateTodayWeather(address, currentWeather) {
   location.textContent = address;
   setIcon(icon, currentWeather.icon);
   temp.textContent = currentWeather.temp;
+  tempUnit.textContent = unitSystem === "us" ? "°F" : "°C";
   conditions.textContent = currentWeather.conditions;
   currentDay.textContent = getNameOfToday();
   currentHour.textContent = formatTimeRounded(currentWeather.dateTime);
   humidity.textContent = currentWeather.humidity + "%";
   precip.textContent = currentWeather.precip + "%";
   windspeed.textContent = currentWeather.windspeed;
+  speedUnit.textContent = unitSystem === "us" ? "mph" : "km/h"
   uvIndex.textContent = currentWeather.uvIndex;
   sunrise.textContent = formatTime(currentWeather.sunrise);
   sunset.textContent = formatTime(currentWeather.sunset);
@@ -130,7 +135,6 @@ function updateTodayWeather(address, currentWeather) {
 function createBottomMain(weekWeather) {
   const mainBottom = document.querySelector(".main__bottom");
   mainBottom.replaceChildren(); //reset mainBottom
-  console.log(weekWeather);
   weekWeather.forEach((day) => {
     const card = createDayCard(day);
     mainBottom.append(card);
@@ -139,7 +143,6 @@ function createBottomMain(weekWeather) {
 
 //creates a card for each day in 7 day forecast
 function createDayCard(dayWeather) {
-  console.log(dayWeather);
   const card = document.createElement("div");
   card.classList.add("card");
 
@@ -164,7 +167,7 @@ function createDayCard(dayWeather) {
   day.textContent = getNameOfDay(dayWeather.dateTime);
   setIcon(icon, dayWeather.icon);
   temp.textContent = dayWeather.temp;
-  tempUnit.textContent = "°F";
+  tempUnit.textContent = unitSystem === "us" ? "°F" : "°C";
   conditions.textContent = dayWeather.conditions;
 
   tempContainer.append(temp, tempUnit);
@@ -231,19 +234,19 @@ function swapMeasurementSystem() {
   const tempValues = document.querySelectorAll(".temp");
   const windspeed = document.querySelector(".windspeed");
 
-  if (measurementSystem === "Imperial") {
-    measurementSystem = "Metric";
+  if (unitSystem === "us") {
+    unitSystem = "metric";
     tempUnit = "°C";
     speedUnit = "km/h";
-    windspeed.textContent = kilometerToMiles(Number(windspeed.textContent));
+    windspeed.textContent = milesToKilometer(Number(windspeed.textContent));
     tempValues.forEach((value) => {
       value.textContent = farenheitToCelsius(Number(value.textContent));
     });
   } else {
-    measurementSystem = "Imperial";
+    unitSystem = "us";
     tempUnit = "°F";
     speedUnit = "mph";
-    windspeed.textContent = milesToKilometer(Number(windspeed.textContent));
+    windspeed.textContent = kilometerToMiles(Number(windspeed.textContent));
     tempValues.forEach((value) => {
       value.textContent = celsiusToFarenheit(Number(value.textContent));
     });

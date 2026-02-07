@@ -198,13 +198,17 @@ button.selected {
   padding-bottom: 1rem;
 }
 
+.speed-unit {
+  color: var(--secondary-font-color);
+}
+
 .date-time {
   display: flex;
   gap: 1rem;
   color: var(--secondary-font-color);
 }
 
-.current-condition {
+.current-conditions {
   color: var(--secondary-font-color);
 }
 
