@@ -2,7 +2,7 @@
 :root {
   --background-color:white;
   /* --background-color: rgba(55, 195, 206, 0.382); */
-  --secondary-backgroud-color: white;
+  --secondary-backgroud-color: rgba(170, 249, 241, 0.615);
   --border: 0px solid rgba(0, 0, 0, 0.628);
   --font-color: black;
   --secondary-font-color: rgba(0, 0, 0, 0.765);
@@ -10,11 +10,10 @@
 
 
 body {
-  font-family:
-    -apple-system, system-ui, "Segoe UI", Roboto, Noto, Oxygen-Sans, Ubuntu,
+  font-family:"Google Sans", -apple-system, system-ui, "Segoe UI", Roboto, Noto, Oxygen-Sans, Ubuntu,
     Cantrell, "Helvetica Neue", sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol";
-    background-color: var(--background-color);
+  background-color: var(--background-color);
 }
 
 .header {
@@ -98,8 +97,8 @@ button.selected {
 
 .main__top {
   display: flex;
-  /* gap: 18rem; */
-  justify-content: space-between;
+  gap: 15rem;
+  /* justify-content: space-between; */
   border: var(--border);
   border-radius: 20px;
   background-color: var(--secondary-backgroud-color);
@@ -109,23 +108,40 @@ button.selected {
 }
 
 .main__top-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   font-size: 1.5rem;
+  /* background-color: var(--background-color); */
+  padding: 1rem;
+  /* border-radius: 10px; */
+}
+
+.current-temp {
+  display: flex;
+  align-items: center;
+}
+
+.date {
+  display: flex;
+  gap: 1rem;
+}
+.location-name {
+font-weight: normal;
+font-size: 2rem;
 }
 
 .main__top-right {
-  /* flex-grow: 1; */
   display: grid;
-  /* justify-self: end; */
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   grid-row-gap: 3rem;
   grid-column-gap: 5rem;
-  /* justify-items: center; */
   align-items: end;
 
   padding: 0 5rem;
-
-  font-size: 2rem;  
+  font-size: 1rem;  
 }
 
 .main__top-right .value{
@@ -145,6 +161,9 @@ button.selected {
 .main__bottom {
   display: flex;
   justify-content: space-between;
+  background-color: var(--secondary-backgroud-color);
+  padding: 2rem 2rem;
+  border-radius: 10px;
 }
 
 .main__bottom img {
@@ -158,24 +177,30 @@ button.selected {
   align-items: center;
 
   border: var(--border);
-  background-color: var(--secondary-backgroud-color);
+  background-color: var(--background-color);
   border-radius: 20px;
 
   gap: .5rem;
-  padding: 1.5rem 1rem;
-  width: 12rem;
+  padding: 1rem 1rem;
+  width: 10rem;
   /* height: */
 
-  font-size: 1.2rem;
+  font-size: 1rem;
+}
+
+.grid-item {
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 1rem;
 }
 
 .card img {
-  width: 5rem;
-  height: 5rem;
+  width: 3rem;
+  height: 3rem;
 }
 
 .card .day {
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .item-title{
@@ -209,10 +234,6 @@ button.selected {
 .date-time {
   display: flex;
   gap: 1rem;
-  color: var(--secondary-font-color);
-}
-
-.current-conditions {
   color: var(--secondary-font-color);
 }
 

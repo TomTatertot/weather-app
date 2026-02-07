@@ -2,7 +2,7 @@
 import "./styles.css";
 import "./reset.css";
 import { parse, format, startOfHour } from "date-fns";
-// import { address, currentWeather, weekWeather } from "./test";
+import { address, currentWeather, weekWeather } from "./test";
 
 let unitSystem = "us";
 
@@ -47,10 +47,7 @@ async function fetchWeather(location) {
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
-
   const weatherJSON = await response.json();
-
-  console.log(weatherJSON);
 
   //show main
   const main = document.querySelector(".main");
@@ -106,7 +103,7 @@ function updateTodayWeather(address, currentWeather) {
   // const content = document.querySelector(".content");
   const mainTop = document.querySelector(".main__top");
 
-  const location = mainTop.querySelector(".location-header");
+  const location = mainTop.querySelector(".location-name");
   const icon = mainTop.querySelector(".current-icon");
   const temp = mainTop.querySelector(".temp");
   const tempUnit = mainTop.querySelector(".temp-unit");
