@@ -7,22 +7,20 @@ import { parse, format, startOfHour } from "date-fns";
 let unitSystem = "us";
 
 // getIconSrc(currentWeather.icon);
-
+const loader = document.querySelector(".loader-container");
 const locationForm = document.querySelector(".search-form");
+const locationInput = document.querySelector("#search-input");
 locationForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  let location = locationForm.querySelector("#search-input").value;
-  locationForm.reset();
-  fetchWeather(location).catch((err) => {
+
+  fetchWeather(locationInput.value)
+  .catch((err) => {
     console.error(err);
   });
-});
 
-// fetchWeather("San Francisco").catch(err => {
-//   console.error(err);
-// })
-// updateTodayWeather("Oceanside", currentWeather);
-// createBottomMain(weekWeather);
+  loader.classList.remove("hidden");
+  locationForm.reset();
+});
 
 const farenheitBtn = document.querySelector(".farenheit");
 const celsiusBtn = document.querySelector(".celsius");
@@ -51,15 +49,22 @@ async function fetchWeather(location) {
   }
 
   const weatherJSON = await response.json();
+
   console.log(weatherJSON);
+
+  //show main
   const main = document.querySelector(".main");
   main.classList.remove("invisible");
+
+  //update main info
   const address = weatherJSON.address;
   const currentWeather = getCurrentWeatherObject(weatherJSON);
   const weekWeather = getWeekWeatherArray(weatherJSON);
   updateTodayWeather(address, currentWeather);
   createBottomMain(weekWeather);
 
+  //fade loader out
+  loader.classList.add("hidden");
   return weatherJSON;
 }
 

@@ -1,8 +1,9 @@
 /* styles.css */
 :root {
-  --background-color: rgba(16, 93, 122, 0.142);
+  --background-color:white;
+  /* --background-color: rgba(55, 195, 206, 0.382); */
   --secondary-backgroud-color: white;
-  --border: 2px solid rgba(128, 128, 128, 0.5);
+  --border: 0px solid rgba(0, 0, 0, 0.628);
   --font-color: black;
   --secondary-font-color: rgba(0, 0, 0, 0.765);
 }
@@ -70,7 +71,7 @@ button.selected {
   display: flex;
   border-radius: 10px;
   border-width: 1px;
-  border: var(--border);
+  border: 1px solid rgba(0, 0, 0, 0.376);
   background-color: var(--secondary-backgroud-color);
   padding: 0 0.5rem;
   /* margin-right: 3rem; */
@@ -114,15 +115,17 @@ button.selected {
 .main__top-right {
   /* flex-grow: 1; */
   display: grid;
+  /* justify-self: end; */
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 3rem;
+  grid-row-gap: 3rem;
+  grid-column-gap: 5rem;
   /* justify-items: center; */
   align-items: end;
 
   padding: 0 5rem;
 
-  font-size: 1.5rem;  
+  font-size: 2rem;  
 }
 
 .main__top-right .value{
@@ -168,6 +171,7 @@ button.selected {
 
 .card img {
   width: 5rem;
+  height: 5rem;
 }
 
 .card .day {
@@ -214,4 +218,47 @@ button.selected {
 
 .invisible {
   visibility: hidden;
+}
+
+.loader-container{
+  width: 100%;
+  height:100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color:rgb(121, 199, 202);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+    /* fade behavior */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 500ms ease, visibility 500ms ease;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #fff;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+.loader-container.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
