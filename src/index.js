@@ -15,6 +15,7 @@ locationForm.addEventListener("submit", (e) => {
 
   fetchWeather(locationInput.value)
   .catch((err) => {
+    console.log("poop");
     console.error(err);
   });
 
