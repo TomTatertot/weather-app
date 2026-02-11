@@ -100,7 +100,7 @@ async function fetchWeather(location) {
 
 //gets the city and state name using longitude and latitude
 async function reverseGeocode(lat, lon) {
-  const url = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=b80e80f2e3764460d2b1eb8f60a59cf2`;
+  const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=b80e80f2e3764460d2b1eb8f60a59cf2`;
   const response = await fetch(url);
 
   if (!response.ok) 
