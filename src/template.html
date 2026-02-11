@@ -8,18 +8,24 @@
   <body>
     <header class="header">
       <h1>Weather</h1>
-      <div class="header-right">
-        <div class="button-container">
-          <button class="farenheit selected">°F</button><span></span
-          ><button class="celsius">°C</button>
-        </div>
-        <form class="search-form">
-          <!-- <label for="search">Please enter a location: </label> -->
-          <div class="search-bar">
+      <form class="search-form">
+        <!-- <label for="search">Please enter a location: </label> -->
+        <div class="search-bar">
+          <!-- <button class="search-btn"><img class="search-icon" src="./images/magnify.svg" alt="" /></button> -->
+          <input
+            type="text"
+            name="search-input"
+            id="search-input"
+            placeholder="Enter address or ZIP code"
+          />
+          <button class="search-btn">
             <img class="search-icon" src="./images/magnify.svg" alt="" />
-            <input type="text" name="search-input" id="search-input" placeholder="Enter address or ZIP code"/>
-          </div>
-        </form>
+          </button>
+        </div>
+      </form>
+      <div class="button-container">
+        <button class="farenheit selected">°F</button>
+        <button class="celsius">°C</button>
       </div>
     </header>
     <div class="loader-container hidden">
@@ -27,7 +33,13 @@
     </div>
 
     <div class="content">
-      <main class="main invisible">
+      <div class="error-container hidden">
+        <p class="error">
+          Location not found. Please enter a valid address or partial address
+          e.g., "San Diego, California"
+        </p>
+      </div>
+      <main class="main hidden">
         <div class="main__top">
           <div class="main__top-left">
             <h2 class="location-name"></h2>

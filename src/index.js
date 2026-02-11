@@ -10,17 +10,15 @@ let unitSystem = "us";
 const loader = document.querySelector(".loader-container");
 const locationForm = document.querySelector(".search-form");
 const locationInput = document.querySelector("#search-input");
+const searchButton = document.querySelector(".search-btn");
+
+searchButton.addEventListener("submit", (e) => {
+  e.preventDefault();
+  submitSearch();
+})
 locationForm.addEventListener("submit", (e) => {
   e.preventDefault();
-
-  fetchWeather(locationInput.value)
-  .catch((err) => {
-    console.log("poop");
-    console.error(err);
-  });
-
-  loader.classList.remove("hidden");
-  locationForm.reset();
+  submitSearch();
 });
 
 const farenheitBtn = document.querySelector(".farenheit");
@@ -42,17 +40,44 @@ celsiusBtn.addEventListener("click", (e) => {
   swapMeasurementSystem();
 });
 
+function submitSearch(){
+  fetchWeather(locationInput.value)
+  .catch((err) => {
+    console.log("in catch");
+    const main = document.querySelector(".main");
+    const errorEl = document.querySelector(".error-container");
+    // loader.classList.add("hidden");
+    main.classList.add("hidden");
+    errorEl.classList.remove("hidden");
+    console.error(err);
+  })
+  .finally(()=>{
+    //whether we receive a resolve/reject, remove the loader and reset the form.
+      loader.classList.add("hidden");
+      locationForm.reset();
+  })
+
+  loader.classList.remove("hidden");
+  locationForm.reset();
+}
+
 async function fetchWeather(location) {
   const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=${unitSystem}&key=K3G2LWP2CFRKQBQBG9G32U75K`;
   const response = await fetch(url);
+
+  //check for any errors, if any, we will be taken to the .catch of fetchWeather.
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
   const weatherJSON = await response.json();
-
+  console.log(weatherJSON);
   //show main
   const main = document.querySelector(".main");
-  main.classList.remove("invisible");
+  main.classList.remove("hidden");
+
+  //hide error if visible
+  const errorEl = document.querySelector(".error-container");
+  errorEl.classList.add("hidden");
 
   //update main info
   const address = weatherJSON.address;
@@ -181,6 +206,21 @@ function createDayCard(dayWeather) {
 async function setIcon(icon, iconName) {
   const module = await import(`./images/${iconName}.svg`);
   icon.src = module.default;
+}
+
+function toggleMain(){
+  const mainEl = document.querySelector(".main");
+  mainEl.classList.toggle("hidden");
+}
+
+function toggleLoader(){
+  const errorEl = document.querySelector(".error-container");
+  errorEl.classList.toggle("hidden");
+}
+
+function toggleError(){
+  const loaderEl = document.querySelector(".loader-container");
+  loaderEl.classList.toggle("hidden");
 }
 
 function getNameOfDay(dateString) {
