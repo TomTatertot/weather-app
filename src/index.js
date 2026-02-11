@@ -5,7 +5,6 @@ import { parse, format, startOfHour } from "date-fns";
 
 //ask user for current location
 navigator.geolocation.getCurrentPosition((position) => {
-  console.log(position);
   let location = `${position.coords.latitude}, ${position.coords.longitude}`;
   submitSearch(location);
 });
@@ -56,20 +55,17 @@ function submitSearch(location) {
   errorEl.classList.add("hidden");
 
   fetchWeather(location) //get location info
-    .then((weatherJSON) => { 
+    .then((weatherJSON) => {
       console.log(weatherJSON);
       /*THEN get the properly formatted name using latitude and longitude 
       in the case they enter a typo (which can still be valid)
       OR they use geolocation API to get their current longitude and latitude
       */
       reverseGeocode(weatherJSON.latitude, weatherJSON.longitude).then(
-        (reverseJSON) => {
+        (geolocationJSON) => {
           //THEN update weather information
-          const address = `${reverseJSON[0].name}, ${reverseJSON[0].state}`;
-          const currentWeather = getCurrentWeatherObject(weatherJSON);
-          const weekWeather = getWeekWeatherArray(weatherJSON);
-          updateTodayWeather(address, currentWeather);
-          createWeekWeather(weekWeather);
+          updateUI(weatherJSON, geolocationJSON);
+          main.classList.remove("hidden");
         },
       );
     })
@@ -80,8 +76,7 @@ function submitSearch(location) {
       console.error(err);
     })
     .finally(() => {
-      //whether we receive a resolve/reject, show main, remove loader, and reset the form.
-      main.classList.remove("hidden");
+      //whether we receive a resolve/reject, remove loader, and reset the form.
       loader.classList.add("hidden");
       locationForm.reset();
     });
@@ -98,17 +93,42 @@ async function fetchWeather(location) {
   return weatherJSON;
 }
 
-//gets the city and state name using longitude and latitude
+//gets the region names using longitude and latitude
 async function reverseGeocode(lat, lon) {
-  const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=b80e80f2e3764460d2b1eb8f60a59cf2`;
+  const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=4&appid=b80e80f2e3764460d2b1eb8f60a59cf2`;
   const response = await fetch(url);
 
-  if (!response.ok) 
+  if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
+  }
 
   const reverseJSON = await response.json();
 
   return reverseJSON;
+}
+
+function updateUI(weatherJSON, geolocationJSON) {
+  const address = getFormattedAddress(geolocationJSON);
+  const currentWeather = getCurrentWeatherObject(weatherJSON);
+  const weekWeather = getWeekWeatherArray(weatherJSON);
+
+  updateTodayWeather(address, currentWeather);
+  createWeekWeather(weekWeather);
+}
+
+//creates and returns formatted address given from
+function getFormattedAddress(geolocationJSON) {
+  console.log(geolocationJSON);
+  let city = geolocationJSON[0].name;
+  let regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+  let country = regionNames.of(geolocationJSON[0].country);
+  
+  if (country === "United States") {
+    let state = geolocationJSON[0].state;
+    return `${city}, ${state}`;
+  } else {
+    return `${city}, ${country}`;
+  }
 }
 
 //returns object containing data of the current day.
