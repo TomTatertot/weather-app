@@ -7,7 +7,6 @@ import { parse, format, startOfHour } from "date-fns";
 let unitSystem = "us";
 
 // getIconSrc(currentWeather.icon);
-const loader = document.querySelector(".loader-container");
 const locationForm = document.querySelector(".search-form");
 const locationInput = document.querySelector("#search-input");
 const searchButton = document.querySelector(".search-btn");
@@ -15,7 +14,7 @@ const searchButton = document.querySelector(".search-btn");
 searchButton.addEventListener("submit", (e) => {
   e.preventDefault();
   submitSearch();
-})
+});
 locationForm.addEventListener("submit", (e) => {
   e.preventDefault();
   submitSearch();
@@ -40,54 +39,47 @@ celsiusBtn.addEventListener("click", (e) => {
   swapMeasurementSystem();
 });
 
-function submitSearch(){
+function submitSearch() {
+  const main = document.querySelector(".main");
+  const errorEl = document.querySelector(".error-container");
+  const loader = document.querySelector(".loader-container");
+
+  //show main and loader
+  loader.classList.remove("hidden");
+
+  //hide error if visible
+  errorEl.classList.add("hidden");
+
   fetchWeather(locationInput.value)
-  .catch((err) => {
-    console.log("in catch");
-    const main = document.querySelector(".main");
-    const errorEl = document.querySelector(".error-container");
-    // loader.classList.add("hidden");
-    main.classList.add("hidden");
-    errorEl.classList.remove("hidden");
-    console.error(err);
-  })
-  .finally(()=>{
-    //whether we receive a resolve/reject, remove the loader and reset the form.
+    .then((weatherJSON) => {
+      //update weather information
+      const address = weatherJSON.address;
+      const currentWeather = getCurrentWeatherObject(weatherJSON);
+      const weekWeather = getWeekWeatherArray(weatherJSON);
+      updateTodayWeather(address, currentWeather);
+      createBottomMain(weekWeather);
+    })
+    .catch((err) => {
+      //show error
+      main.classList.add("hidden");
+      errorEl.classList.remove("hidden");
+      console.error(err);
+    })
+    .finally(() => {
+      //whether we receive a resolve/reject, show main, remove loader, and reset the form.
+      main.classList.remove("hidden");
       loader.classList.add("hidden");
       locationForm.reset();
-  })
-
-  loader.classList.remove("hidden");
-  locationForm.reset();
+    });
 }
 
 async function fetchWeather(location) {
   const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=${unitSystem}&key=K3G2LWP2CFRKQBQBG9G32U75K`;
   const response = await fetch(url);
-
-  //check for any errors, if any, we will be taken to the .catch of fetchWeather.
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
   const weatherJSON = await response.json();
-  console.log(weatherJSON);
-  //show main
-  const main = document.querySelector(".main");
-  main.classList.remove("hidden");
-
-  //hide error if visible
-  const errorEl = document.querySelector(".error-container");
-  errorEl.classList.add("hidden");
-
-  //update main info
-  const address = weatherJSON.address;
-  const currentWeather = getCurrentWeatherObject(weatherJSON);
-  const weekWeather = getWeekWeatherArray(weatherJSON);
-  updateTodayWeather(address, currentWeather);
-  createBottomMain(weekWeather);
-
-  //fade loader out
-  loader.classList.add("hidden");
   return weatherJSON;
 }
 
@@ -154,7 +146,7 @@ function updateTodayWeather(address, currentWeather) {
   humidity.textContent = currentWeather.humidity + "%";
   precip.textContent = currentWeather.precip + "%";
   windspeed.textContent = currentWeather.windspeed;
-  speedUnit.textContent = unitSystem === "us" ? "mph" : "km/h"
+  speedUnit.textContent = unitSystem === "us" ? "mph" : "km/h";
   uvIndex.textContent = currentWeather.uvIndex;
   sunrise.textContent = formatTime(currentWeather.sunrise);
   sunset.textContent = formatTime(currentWeather.sunset);
@@ -208,17 +200,17 @@ async function setIcon(icon, iconName) {
   icon.src = module.default;
 }
 
-function toggleMain(){
+function toggleMain() {
   const mainEl = document.querySelector(".main");
   mainEl.classList.toggle("hidden");
 }
 
-function toggleLoader(){
+function toggleLoader() {
   const errorEl = document.querySelector(".error-container");
   errorEl.classList.toggle("hidden");
 }
 
-function toggleError(){
+function toggleError() {
   const loaderEl = document.querySelector(".loader-container");
   loaderEl.classList.toggle("hidden");
 }
