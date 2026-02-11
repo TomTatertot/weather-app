@@ -2,10 +2,10 @@
 import "./styles.css";
 import "./reset.css";
 import { parse, format, startOfHour } from "date-fns";
-// import { address, currentWeather, weekWeather } from "./test";
 
+//ask user for current location
 navigator.geolocation.getCurrentPosition((position) => {
-  let location = `${position.coords.latitude},${position.coords.longitude}`
+  let location = `${position.coords.latitude}, ${position.coords.longitude}`;
   submitSearch(location);
 });
 
@@ -28,7 +28,7 @@ locationForm.addEventListener("submit", (e) => {
 const farenheitBtn = document.querySelector(".farenheit");
 const celsiusBtn = document.querySelector(".celsius");
 
-farenheitBtn.addEventListener("click", (e) => {
+farenheitBtn.addEventListener("click", () => {
   if (farenheitBtn.classList.contains("selected")) return;
 
   farenheitBtn.classList.add("selected");
@@ -36,7 +36,7 @@ farenheitBtn.addEventListener("click", (e) => {
   swapMeasurementSystem();
 });
 
-celsiusBtn.addEventListener("click", (e) => {
+celsiusBtn.addEventListener("click", () => {
   if (celsiusBtn.classList.contains("selected")) return;
 
   celsiusBtn.classList.add("selected");
@@ -55,15 +55,23 @@ function submitSearch(location) {
   //hide error if visible
   errorEl.classList.add("hidden");
 
-  fetchWeather(location)
-    .then((weatherJSON) => {
+  fetchWeather(location) //get location info
+    .then((weatherJSON) => { 
       console.log(weatherJSON);
-      //update weather information
-      const address = weatherJSON.address;
-      const currentWeather = getCurrentWeatherObject(weatherJSON);
-      const weekWeather = getWeekWeatherArray(weatherJSON);
-      updateTodayWeather(address, currentWeather);
-      createWeekWeather(weekWeather);
+      /*THEN get the properly formatted name using latitude and longitude 
+      in the case they enter a typo (which can still be valid)
+      OR they use geolocation API to get their current longitude and latitude
+      */
+      reverseGeocode(weatherJSON.latitude, weatherJSON.longitude).then(
+        (reverseJSON) => {
+          //THEN update weather information
+          const address = `${reverseJSON[0].name}, ${reverseJSON[0].state}`;
+          const currentWeather = getCurrentWeatherObject(weatherJSON);
+          const weekWeather = getWeekWeatherArray(weatherJSON);
+          updateTodayWeather(address, currentWeather);
+          createWeekWeather(weekWeather);
+        },
+      );
     })
     .catch((err) => {
       //show error
@@ -79,6 +87,7 @@ function submitSearch(location) {
     });
 }
 
+//uses Visual Crossing's API to receive weather information
 async function fetchWeather(location) {
   const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=${unitSystem}&key=K3G2LWP2CFRKQBQBG9G32U75K`;
   const response = await fetch(url);
@@ -86,8 +95,20 @@ async function fetchWeather(location) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
   const weatherJSON = await response.json();
-  console.log(weatherJSON);
   return weatherJSON;
+}
+
+//gets the city and state name using longitude and latitude
+async function reverseGeocode(lat, lon) {
+  const url = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=b80e80f2e3764460d2b1eb8f60a59cf2`;
+  const response = await fetch(url);
+
+  if (!response.ok) 
+    throw new Error(`HTTP error! Status: ${response.status}`);
+
+  const reverseJSON = await response.json();
+
+  return reverseJSON;
 }
 
 //returns object containing data of the current day.
