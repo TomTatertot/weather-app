@@ -35,6 +35,17 @@ body {
   gap: 1rem;
 }
 
+.logo {
+  display: flex;
+}
+.logo-img {
+  width: 3rem;
+}
+.logo-name {
+  color: #31CFFF;
+  font-size: 2.3rem;
+}
+
 .search-form  {
   display: flex;
   align-items: center;
@@ -186,7 +197,8 @@ font-size: 2rem;
   flex: 0 0 10rem;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center; 
+  text-align: center;
 
   border: var(--border);
   background-color: white;

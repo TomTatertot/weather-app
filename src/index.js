@@ -57,7 +57,7 @@ function submitSearch() {
       const currentWeather = getCurrentWeatherObject(weatherJSON);
       const weekWeather = getWeekWeatherArray(weatherJSON);
       updateTodayWeather(address, currentWeather);
-      createBottomMain(weekWeather);
+      createWeekWeather(weekWeather);
     })
     .catch((err) => {
       //show error
@@ -152,7 +152,7 @@ function updateTodayWeather(address, currentWeather) {
   sunset.textContent = formatTime(currentWeather.sunset);
 }
 
-function createBottomMain(weekWeather) {
+function createWeekWeather(weekWeather) {
   const mainBottom = document.querySelector(".main__bottom");
   mainBottom.replaceChildren(); //reset mainBottom
   weekWeather.forEach((day) => {
@@ -198,21 +198,6 @@ function createDayCard(dayWeather) {
 async function setIcon(icon, iconName) {
   const module = await import(`./images/${iconName}.svg`);
   icon.src = module.default;
-}
-
-function toggleMain() {
-  const mainEl = document.querySelector(".main");
-  mainEl.classList.toggle("hidden");
-}
-
-function toggleLoader() {
-  const errorEl = document.querySelector(".error-container");
-  errorEl.classList.toggle("hidden");
-}
-
-function toggleError() {
-  const loaderEl = document.querySelector(".loader-container");
-  loaderEl.classList.toggle("hidden");
 }
 
 function getNameOfDay(dateString) {
