@@ -4,6 +4,11 @@ import "./reset.css";
 import { parse, format, startOfHour } from "date-fns";
 // import { address, currentWeather, weekWeather } from "./test";
 
+navigator.geolocation.getCurrentPosition((position) => {
+  let location = `${position.coords.latitude},${position.coords.longitude}`
+  submitSearch(location);
+});
+
 let unitSystem = "us";
 
 // getIconSrc(currentWeather.icon);
@@ -13,11 +18,11 @@ const searchButton = document.querySelector(".search-btn");
 
 searchButton.addEventListener("submit", (e) => {
   e.preventDefault();
-  submitSearch();
+  submitSearch(locationInput.value);
 });
 locationForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  submitSearch();
+  submitSearch(locationInput.value);
 });
 
 const farenheitBtn = document.querySelector(".farenheit");
@@ -39,7 +44,7 @@ celsiusBtn.addEventListener("click", (e) => {
   swapMeasurementSystem();
 });
 
-function submitSearch() {
+function submitSearch(location) {
   const main = document.querySelector(".main");
   const errorEl = document.querySelector(".error-container");
   const loader = document.querySelector(".loader-container");
@@ -50,8 +55,9 @@ function submitSearch() {
   //hide error if visible
   errorEl.classList.add("hidden");
 
-  fetchWeather(locationInput.value)
+  fetchWeather(location)
     .then((weatherJSON) => {
+      console.log(weatherJSON);
       //update weather information
       const address = weatherJSON.address;
       const currentWeather = getCurrentWeatherObject(weatherJSON);
@@ -80,6 +86,7 @@ async function fetchWeather(location) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
   const weatherJSON = await response.json();
+  console.log(weatherJSON);
   return weatherJSON;
 }
 
@@ -93,7 +100,7 @@ function getCurrentWeatherObject(dataJSON) {
     icon: data.icon,
     dateTime: data.datetime,
     humidity: data.humidity,
-    precip: data.precip,
+    precip: data.precipprob,
     windspeed: data.windspeed,
     uvIndex: data.uvindex,
     sunset: data.sunset,
@@ -119,29 +126,29 @@ function getWeekWeatherArray(dataJSON) {
 
 function updateTodayWeather(address, currentWeather) {
   // const content = document.querySelector(".content");
-  const mainTop = document.querySelector(".main__top");
+  const todayContainer = document.querySelector(".today-container");
 
-  const location = mainTop.querySelector(".location-name");
-  const icon = mainTop.querySelector(".current-icon");
-  const temp = mainTop.querySelector(".temp");
-  const tempUnit = mainTop.querySelector(".temp-unit");
-  const conditions = mainTop.querySelector(".current-conditions");
-  const currentDay = mainTop.querySelector(".current-day");
-  const currentHour = mainTop.querySelector(".current-hour");
-  const humidity = mainTop.querySelector(".humidity");
-  const precip = mainTop.querySelector(".precipitation");
-  const windspeed = mainTop.querySelector(".windspeed");
-  const speedUnit = mainTop.querySelector(".speed-unit");
-  const uvIndex = mainTop.querySelector(".uv-index");
-  const sunrise = mainTop.querySelector(".sunrise");
-  const sunset = mainTop.querySelector(".sunset");
+  const location = todayContainer.querySelector(".location-name");
+  const icon = todayContainer.querySelector(".today-icon");
+  const temp = todayContainer.querySelector(".temp");
+  const tempUnit = todayContainer.querySelector(".temp-unit");
+  const conditions = todayContainer.querySelector(".today-conditions");
+  const dayName = todayContainer.querySelector(".day");
+  const currentHour = todayContainer.querySelector(".hour");
+  const humidity = todayContainer.querySelector(".humidity");
+  const precip = todayContainer.querySelector(".precipitation");
+  const windspeed = todayContainer.querySelector(".windspeed");
+  const speedUnit = todayContainer.querySelector(".speed-unit");
+  const uvIndex = todayContainer.querySelector(".uv-index");
+  const sunrise = todayContainer.querySelector(".sunrise");
+  const sunset = todayContainer.querySelector(".sunset");
 
   location.textContent = address;
   setIcon(icon, currentWeather.icon);
   temp.textContent = currentWeather.temp;
   tempUnit.textContent = unitSystem === "us" ? "°F" : "°C";
   conditions.textContent = currentWeather.conditions;
-  currentDay.textContent = getNameOfToday();
+  dayName.textContent = getNameOfToday();
   currentHour.textContent = formatTimeRounded(currentWeather.dateTime);
   humidity.textContent = currentWeather.humidity + "%";
   precip.textContent = currentWeather.precip + "%";
@@ -153,21 +160,21 @@ function updateTodayWeather(address, currentWeather) {
 }
 
 function createWeekWeather(weekWeather) {
-  const mainBottom = document.querySelector(".main__bottom");
+  const mainBottom = document.querySelector(".week-grid-container");
   mainBottom.replaceChildren(); //reset mainBottom
   weekWeather.forEach((day) => {
-    const card = createDayCard(day);
+    const card = createWeekCard(day);
     mainBottom.append(card);
   });
 }
 
 //creates a card for each day in 7 day forecast
-function createDayCard(dayWeather) {
+function createWeekCard(dayWeather) {
   const card = document.createElement("div");
-  card.classList.add("card");
+  card.classList.add("week-card");
 
   const day = document.createElement("div");
-  day.classList.add("day");
+  day.classList.add("day-name");
 
   const icon = document.createElement("img");
   icon.classList.add("icon");

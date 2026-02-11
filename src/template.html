@@ -4,11 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <header class="header">
       <div class="logo">
-        <img class="logo-img" src="./images/cloud-logo.svg" alt="">
+        <img class="logo-img" src="./images/cloud-logo.svg" alt="" />
         <h1 class="logo-name">CloudBurst</h1>
       </div>
       <form class="search-form">
@@ -19,7 +25,7 @@
             type="text"
             name="search-input"
             id="search-input"
-            placeholder="Enter address or ZIP code"
+            placeholder="Search location"
           />
           <button class="search-btn">
             <img class="search-icon" src="./images/magnify.svg" alt="" />
@@ -43,64 +49,64 @@
         </p>
       </div>
       <main class="main hidden">
-        <div class="main__top">
-          <div class="main__top-left">
+        <div class="today-container">
+          <div class="today-overview-card">
             <h2 class="location-name"></h2>
-            <div class="current-temp">
-              <img class="current-icon" />
+            <div class="today-temp">
+              <img class="today-icon" />
               <span class="temp"></span>
               <span class="temp-unit"></span>
             </div>
-            <div class="current-conditions"></div>
-            <div class="date">
-              <div class="current-day"></div>
-              <div class="current-hour"></div>
+            <div class="today-conditions"></div>
+            <div class="today-date">
+              <div class="day"></div>
+              <div class="hour"></div>
             </div>
           </div>
-          <div class="main__top-right">
-            <div class="grid-item">
-              <div class="item-title">
+          <section class="day-grid-container">
+            <div class="day-card">
+              <div class="title">
                 <img src="./images/humidity.svg" alt="Humidity" /> Humidity:
               </div>
               <div class="humidity value"></div>
             </div>
-            <div class="grid-item">
-              <div class="item-title">
+            <div class="day-card">
+              <div class="title">
                 <img src="./images/precipitation.svg" alt="Precipitation" />
-                Precipitation:
+                Chance of Rain:
               </div>
               <div class="precipitation value"></div>
             </div>
-            <div class="grid-item">
-              <div class="item-title">
+            <div class="day-card">
+              <div class="title">
                 <img src="./images/windspeed.svg" alt="Wind" /> Wind:
               </div>
               <span class="windspeed value"></span>
               <span class="speed-unit"></span>
             </div>
-            <div class="grid-item">
-              <div class="item-title">
+            <div class="day-card">
+              <div class="title">
                 <img src="./images/uv-index.svg" alt="UV Index" /> UV Index:
               </div>
               <div class="uv-index value"></div>
             </div>
-            <div class="grid-item">
-              <div class="item-title">
+            <div class="day-card">
+              <div class="title">
                 <img src="./images/sunrise.svg" alt="Sunrise" />Sunrise:
               </div>
               <div class="sunrise value"></div>
             </div>
-            <div class="grid-item">
-              <div class="item-title">
+            <div class="day-card">
+              <div class="title">
                 <img src="./images/sunset.svg" alt="Sunset" />Sunset:
               </div>
               <div class="sunset value"></div>
             </div>
           </div>
-        </div>
-        <h1 class="main__bottom-title">7 Day Forecast</h1>
+        </section>
+        <h1 class="week-info-title">7 Day Forecast</h1>
 
-        <div class="main__bottom"></div>
+        <div class="week-grid-container"></div>
         <div></div>
       </main>
     </div>
