@@ -5,13 +5,13 @@ import { parse, format, startOfHour } from "date-fns";
 
 //ask user for current location
 navigator.geolocation.getCurrentPosition((position) => {
+  console.log(position);
   let location = `${position.coords.latitude}, ${position.coords.longitude}`;
   submitSearch(location);
 });
 
 let unitSystem = "us";
 
-// getIconSrc(currentWeather.icon);
 const locationForm = document.querySelector(".search-form");
 const locationInput = document.querySelector("#search-input");
 const searchButton = document.querySelector(".search-btn");
