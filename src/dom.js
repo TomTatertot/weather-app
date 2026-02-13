@@ -1,4 +1,12 @@
-function updateTodayWeather(address, currentWeather) {
+import {
+  getNameOfDay,
+  getNameOfToday,
+  formatTimeRounded,
+  formatTime,
+  setIcon
+} from "./utils.js";
+
+function updateTodayWeather(address, currentWeather, unitSystem) {
   // const content = document.querySelector(".content");
   const todayContainer = document.querySelector(".today-container");
 
@@ -43,7 +51,7 @@ function createWeekWeather(weekWeather) {
 }
 
 //creates a card for each day in 7 day forecast
-function createWeekCard(dayWeather) {
+function createWeekCard(dayWeather, unitSystem) {
   const card = document.createElement("div");
   card.classList.add("week-card");
 
@@ -75,3 +83,61 @@ function createWeekCard(dayWeather) {
   card.append(day, icon, tempContainer, conditions);
   return card;
 }
+
+function setUnitBtnToFarenheit() {
+  const farenheitBtn = document.querySelector(".farenheit");
+  const celsiusBtn = document.querySelector(".celsius");
+  farenheitBtn.classList.add("selected");
+  celsiusBtn.classList.remove("selected");
+}
+
+function setUnitBtnToCelsius() {
+  const farenheitBtn = document.querySelector(".farenheit");
+  const celsiusBtn = document.querySelector(".celsius");
+  farenheitBtn.classList.remove("selected");
+  celsiusBtn.classList.add("selected");
+}
+
+function showMain() {
+  const main = document.querySelector(".main");
+  main.classList.remove("hidden");
+}
+
+function hideMain() {
+  const main = document.querySelector(".main");
+  main.classList.add("hidden");
+}
+
+function showLoader() {
+  const loader = document.querySelector(".loader-container");
+  loader.classList.remove("hidden");
+}
+
+function hideLoader() {
+  const loader = document.querySelector(".loader-container");
+  loader.classList.add("hidden");
+}
+
+function showError() {
+  const error = document.querySelector(".error-container");
+  error.classList.remove("hidden");
+}
+
+function hideError() {
+  const error = document.querySelector(".error-container");
+  error.classList.add("hidden");
+}
+
+export {
+  updateTodayWeather,
+  createWeekWeather,
+  createWeekCard,
+  setUnitBtnToFarenheit,
+  setUnitBtnToCelsius,
+  showMain,
+  hideMain,
+  showLoader,
+  hideLoader,
+  showError,
+  hideError,
+};

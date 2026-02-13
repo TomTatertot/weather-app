@@ -45,6 +45,27 @@ function milesToKilometer(speed) {
   return result.toFixed(1);
 }
 
+//dynamically imports icons
+async function setIcon(icon, iconName) {
+  const module = await import(`./images/weather-icons/${iconName}.svg`);
+  icon.src = module.default;
+}
+
+//creates and returns formatted address given from
+function getFormattedAddress(locationJSON) {
+  console.log(locationJSON);
+  let city = locationJSON.name;
+  let regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+  let country = regionNames.of(locationJSON.country);
+
+  if (country === "United States") {
+    let state = locationJSON.state;
+    return `${city}, ${state}`;
+  } else {
+    return `${city}, ${country}`;
+  }
+}
+
 
 export {
   getNameOfDay, 
@@ -55,4 +76,6 @@ export {
   celsiusToFarenheit,
   kilometerToMiles, 
   milesToKilometer,
+  setIcon,
+  getFormattedAddress
 }
