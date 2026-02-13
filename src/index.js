@@ -1,7 +1,7 @@
 // index.js
 import "./styles.css";
 import "./reset.css";
-import { fetchWeatherJSON, fetchAddress, getUserCoordinates } from "./api.js";
+import { fetchWeatherJSON, fetchAddressJSON, getUserCoordinates } from "./api.js";
 import {getFormattedAddress} from "./utils.js";
 import {
   updateTodayWeather,
@@ -72,7 +72,7 @@ function submitSearch(location) {
     .then((weatherJSON) => {
       /*THEN get the properly formatted name using latitude and longitude in the case they enter a typo (which can still be valid)
       OR they use geolocation API to get their current longitude and latitude */
-      fetchAddress(weatherJSON.latitude, weatherJSON.longitude).then(
+      fetchAddressJSON(weatherJSON.latitude, weatherJSON.longitude).then(
         (locationJSON) => {
           state.lastQuery = location;
           state.address = getFormattedAddress(locationJSON);
