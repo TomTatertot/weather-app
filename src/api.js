@@ -1,5 +1,5 @@
 //uses Visual Crossing's API to receive weather information
-async function fetchWeather(location, unitSystem) {
+async function fetchWeatherJSON(location, unitSystem) {
   const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=${unitSystem}&key=K3G2LWP2CFRKQBQBG9G32U75K`;
   const response = await fetch(url);
   if (!response.ok) {
@@ -10,7 +10,7 @@ async function fetchWeather(location, unitSystem) {
 }
 
 //gets the readable region names using longitude and latitude
-async function fetchAddress(lat, lon) {
+async function fetchAddressJSON(lat, lon) {
   const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=b80e80f2e3764460d2b1eb8f60a59cf2`;
   const response = await fetch(url);
 
@@ -34,4 +34,4 @@ async function getUserCoordinates() {
   return await promise;
 }
 
-export { fetchWeather, fetchAddress, getUserCoordinates};
+export { fetchWeatherJSON, fetchAddressJSON, getUserCoordinates};
