@@ -1,13 +1,25 @@
 // index.js
 import "./styles.css";
 import "./reset.css";
-import { parse, format, startOfHour } from "date-fns";
+import { fetchWeather, fetchAddress } from "./api.js";
+import {
+  getNameOfDay,
+  getNameOfToday,
+  formatTimeRounded,
+  formatTime,
+  farenheitToCelsius,
+  celsiusToFarenheit,
+  kilometerToMiles,
+  milesToKilometer,
+} from "./utils.js";
 
-//ask user for current location
-navigator.geolocation.getCurrentPosition((position) => {
-  let location = `${position.coords.latitude}, ${position.coords.longitude}`;
-  submitSearch(location);
-});
+const state = {
+  lastQuery: "",
+  address: "", 
+  unitSystem: "us",
+  currentWeather: {},
+  weekWeather: []
+}
 
 let unitSystem = "us";
 
@@ -61,10 +73,10 @@ function submitSearch(location) {
       in the case they enter a typo (which can still be valid)
       OR they use geolocation API to get their current longitude and latitude
       */
-      reverseGeocode(weatherJSON.latitude, weatherJSON.longitude).then(
-        (geolocationJSON) => {
+      fetchAddress(weatherJSON.latitude, weatherJSON.longitude).then(
+        (locationJSON) => {
           //THEN update weather information
-          updateUI(weatherJSON, geolocationJSON);
+          updateUI(weatherJSON, locationJSON);
           main.classList.remove("hidden");
         },
       );
@@ -82,33 +94,9 @@ function submitSearch(location) {
     });
 }
 
-//uses Visual Crossing's API to receive weather information
-async function fetchWeather(location) {
-  const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/next7days?unitGroup=${unitSystem}&key=K3G2LWP2CFRKQBQBG9G32U75K`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-  const weatherJSON = await response.json();
-  return weatherJSON;
-}
 
-//gets the region names using longitude and latitude
-async function reverseGeocode(lat, lon) {
-  const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=4&appid=b80e80f2e3764460d2b1eb8f60a59cf2`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-
-  const reverseJSON = await response.json();
-
-  return reverseJSON;
-}
-
-function updateUI(weatherJSON, geolocationJSON) {
-  const address = getFormattedAddress(geolocationJSON);
+function updateUI(weatherJSON, locationJSON) {
+  const address = getFormattedAddress(locationJSON);
   const currentWeather = getCurrentWeatherObject(weatherJSON);
   const weekWeather = getWeekWeatherArray(weatherJSON);
 
@@ -117,14 +105,14 @@ function updateUI(weatherJSON, geolocationJSON) {
 }
 
 //creates and returns formatted address given from
-function getFormattedAddress(geolocationJSON) {
-  console.log(geolocationJSON);
-  let city = geolocationJSON[0].name;
+function getFormattedAddress(locationJSON) {
+  console.log(locationJSON);
+  let city = locationJSON[0].name;
   let regionNames = new Intl.DisplayNames(["en"], { type: "region" });
-  let country = regionNames.of(geolocationJSON[0].country);
-  
+  let country = regionNames.of(locationJSON[0].country);
+
   if (country === "United States") {
-    let state = geolocationJSON[0].state;
+    let state = locationJSON[0].state;
     return `${city}, ${state}`;
   } else {
     return `${city}, ${country}`;
@@ -246,51 +234,6 @@ function createWeekCard(dayWeather) {
 async function setIcon(icon, iconName) {
   const module = await import(`./images/${iconName}.svg`);
   icon.src = module.default;
-}
-
-function getNameOfDay(dateString) {
-  const parsedDate = parse(dateString, "yyyy-MM-dd", new Date());
-  const dayName = format(parsedDate, "EEEE");
-  return dayName;
-}
-
-function getNameOfToday() {
-  return format(new Date(), "EEEE");
-}
-
-function formatTimeRounded(time) {
-  //Create Date object given string. HH: 24 hour time, mm: minutes, ss: seconds
-  const date = parse(time, "HH:mm:ss", new Date());
-  const rounded = startOfHour(date); //round down to start of hour
-  const formatted = format(rounded, "h:mm a"); //h: 12 hour time, mm: minutes  a: AM/PM
-  return formatted;
-}
-
-function formatTime(time) {
-  const date = parse(time, "HH:mm:ss", new Date());
-  const formatted = format(date, "h:mm a");
-  return formatted;
-}
-//°C
-function farenheitToCelsius(temp) {
-  const result = ((temp - 32) * 5) / 9;
-  return result.toFixed(1);
-}
-
-//°F
-function celsiusToFarenheit(temp) {
-  const result = (temp * 9) / 5 + 32;
-  return result.toFixed(1);
-}
-
-function kilometerToMiles(speed) {
-  const result = speed / 1.609;
-  return result.toFixed(1);
-}
-
-function milesToKilometer(speed) {
-  const result = speed * 1.609;
-  return result.toFixed(1);
 }
 
 function swapMeasurementSystem() {
