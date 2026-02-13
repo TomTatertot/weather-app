@@ -1,14 +1,8 @@
 // index.js
 import "./styles.css";
 import "./reset.css";
-import { fetchWeather, fetchAddress } from "./api.js";
-import {
-  farenheitToCelsius,
-  celsiusToFarenheit,
-  kilometerToMiles,
-  milesToKilometer,
-  getFormattedAddress,
-} from "./utils.js";
+import { fetchWeather, fetchAddress, getUserCoordinates } from "./api.js";
+import {getFormattedAddress} from "./utils.js";
 import {
   updateTodayWeather,
   createWeekWeather,
@@ -29,7 +23,10 @@ const state = {
   currentWeather: {},
   weekWeather: [],
 };
-fetchAddress(33.1977, -117.3788);
+
+getUserCoordinates().then((location)=>{
+  submitSearch(location);
+});
 
 const locationForm = document.querySelector(".search-form");
 const searchButton = document.querySelector(".search-btn");
@@ -73,11 +70,8 @@ function submitSearch(location) {
 
   fetchWeather(location, state.unitSystem) //get location info
     .then((weatherJSON) => {
-      console.log(weatherJSON);
-      /*THEN get the properly formatted name using latitude and longitude 
-      in the case they enter a typo (which can still be valid)
-      OR they use geolocation API to get their current longitude and latitude
-      */
+      /*THEN get the properly formatted name using latitude and longitude in the case they enter a typo (which can still be valid)
+      OR they use geolocation API to get their current longitude and latitude */
       fetchAddress(weatherJSON.latitude, weatherJSON.longitude).then(
         (locationJSON) => {
           state.lastQuery = location;
@@ -101,14 +95,8 @@ function submitSearch(location) {
 }
 
 function renderUI() {
-  // const address = state.address;
   updateTodayWeather(state.address, state.currentWeather, state.unitSystem);
   createWeekWeather(state.weekWeather, state.unitSystem);
-  // const address = getFormattedAddress(locationJSON);
-  // const currentWeather = getCurrentWeatherObject(weatherJSON);
-  // const weekWeather = getWeekWeatherArray(weatherJSON);
-  // updateTodayWeather(address, currentWeather);
-  // createWeekWeather(weekWeather);
 }
 
 //returns object containing data of the current day.
@@ -145,43 +133,6 @@ function getWeekWeatherArray(dataJSON) {
   return weekWeather;
 }
 
-// function swapMeasurementSystem() {
-//   let tempUnit;
-//   let speedUnit;
-
-//   const tempUnits = document.querySelectorAll(".temp-unit");
-//   const speedUnits = document.querySelectorAll(".speed-unit");
-//   const tempValues = document.querySelectorAll(".temp");
-//   const windspeed = document.querySelector(".windspeed");
-
-//   if (state.unitSystem === "us") {
-//     unitSystem = "metric";
-//     tempUnit = "°C";
-//     speedUnit = "km/h";
-//     windspeed.textContent = milesToKilometer(Number(windspeed.textContent));
-//     tempValues.forEach((value) => {
-//       value.textContent = farenheitToCelsius(Number(value.textContent));
-//     });
-//   } else {
-//     unitSystem = "us";
-//     tempUnit = "°F";
-//     speedUnit = "mph";
-//     windspeed.textContent = kilometerToMiles(Number(windspeed.textContent));
-//     tempValues.forEach((value) => {
-//       value.textContent = celsiusToFarenheit(Number(value.textContent));
-//     });
-  // tempUnits.forEach((unit) => {
-  //   unit.textContent = tempUnit;
-  // });
-
-  // speedUnits.forEach((unit) => {
-  //   unit.textContent = speedUnit;
-  // });
-//   }
-
 function swapMeasurementSystem(){
-  console.log(state.unitSystem);
   state.unitSystem = state.unitSystem === "us" ? "metric" : "us";
-  console.log(state.unitSystem);
-
 }

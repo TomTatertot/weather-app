@@ -23,27 +23,6 @@ function formatTime(time) {
   const formatted = format(date, "h:mm a");
   return formatted;
 }
-//°C
-function farenheitToCelsius(temp) {
-  const result = ((temp - 32) * 5) / 9;
-  return result.toFixed(1);
-}
-
-//°F
-function celsiusToFarenheit(temp) {
-  const result = (temp * 9) / 5 + 32;
-  return result.toFixed(1);
-}
-
-function kilometerToMiles(speed) {
-  const result = speed / 1.609;
-  return result.toFixed(1);
-}
-
-function milesToKilometer(speed) {
-  const result = speed * 1.609;
-  return result.toFixed(1);
-}
 
 //dynamically imports icons
 async function setIcon(icon, iconName) {
@@ -72,10 +51,6 @@ export {
   getNameOfToday, 
   formatTimeRounded, 
   formatTime, 
-  farenheitToCelsius, 
-  celsiusToFarenheit,
-  kilometerToMiles, 
-  milesToKilometer,
   setIcon,
   getFormattedAddress
 }

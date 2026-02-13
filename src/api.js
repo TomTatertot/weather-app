@@ -19,16 +19,19 @@ async function fetchAddress(lat, lon) {
   }
 
   const locationJSON = await response.json();
-  console.log(locationJSON);
   return locationJSON[0];
 }
 
-//ask user for current location
-function getGeolocation() {
-  navigator.geolocation.getCurrentPosition((position) => {
-    let location = `${position.coords.latitude}, ${position.coords.longitude}`;
-    return location;
+// ask user for current location. If user accepts, return coordinates.
+async function getUserCoordinates() {
+  let promise = new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      let location = `${position.coords.latitude}, ${position.coords.longitude}`;
+      resolve(location);
+    });
   });
+
+  return await promise;
 }
 
-export { fetchWeather, fetchAddress, getGeolocation};
+export { fetchWeather, fetchAddress, getUserCoordinates};
