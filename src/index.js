@@ -36,29 +36,22 @@ const celsiusBtn = document.querySelector(".celsius");
 searchButton.addEventListener("submit", (e) => {
   const searchInputEl = document.querySelector("#search-input");
   e.preventDefault();
-  //set all the state values
   submitSearch(searchInputEl.value);
-  // submitSearch(locationInput.value);
 });
 
 locationForm.addEventListener("submit", (e) => {
   const searchInputEl = document.querySelector("#search-input");
   submitSearch(searchInputEl.value);
   e.preventDefault();
-  // submitSearch(locationInput.value);
 });
 
 farenheitBtn.addEventListener("click", () => {
-  // if (unitSystem === "us") return;
   setUnitBtnToFarenheit();
   swapMeasurementSystem();
   submitSearch(state.lastQuery);
-  // renderUI();
 });
 
 celsiusBtn.addEventListener("click", () => {
-  // if (celsiusBtn.classList.contains("selected")) return;
-
   setUnitBtnToCelsius();
   swapMeasurementSystem();
   submitSearch(state.lastQuery);

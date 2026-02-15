@@ -1,4 +1,4 @@
-import {
+  import {
   getNameOfDay,
   getNameOfToday,
   formatTimeRounded,
@@ -41,11 +41,11 @@ function updateTodayWeather(address, currentWeather, unitSystem) {
   sunset.textContent = formatTime(currentWeather.sunset);
 }
 
-function createWeekWeather(weekWeather) {
+function createWeekWeather(weekWeather, unitSystem) {
   const mainBottom = document.querySelector(".week-grid-container");
   mainBottom.replaceChildren(); //reset mainBottom
   weekWeather.forEach((day) => {
-    const card = createWeekCard(day);
+    const card = createWeekCard(day, unitSystem);
     mainBottom.append(card);
   });
 }
